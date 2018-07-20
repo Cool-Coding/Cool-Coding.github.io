@@ -109,16 +109,17 @@
 
 
   <meta name="description" content="这篇文章是Dubbo源码分析的开端，与其说这篇文章是Dubbo源码分析，不如是spring源码分析，因为大部分都是在分析spring如何解析xml配置文件的，为了与后面的Dubbo源码分析保持一致，估且这样命名了使用Dubbo框架开发分布式服务时，一般使用spring进行管理，在spring的配置文件中进行配置，例如服务提供者Provider端配置如下: 123456789101112131415">
+<meta name="keywords" content="dubbo,spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="半亩方塘">
+<meta property="og:title" content="Dubbo源码分析-Dubbo是如何整合spring-framework的">
 <meta property="og:url" content="https://cool-coding.github.io/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/index.html">
 <meta property="og:site_name" content="半亩方塘">
 <meta property="og:description" content="这篇文章是Dubbo源码分析的开端，与其说这篇文章是Dubbo源码分析，不如是spring源码分析，因为大部分都是在分析spring如何解析xml配置文件的，为了与后面的Dubbo源码分析保持一致，估且这样命名了使用Dubbo框架开发分布式服务时，一般使用spring进行管理，在spring的配置文件中进行配置，例如服务提供者Provider端配置如下: 123456789101112131415">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-7db0ebafebf071b3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-07-20T13:13:29.152Z">
+<meta property="og:updated_time" content="2018-07-20T13:25:40.010Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="半亩方塘">
+<meta name="twitter:title" content="Dubbo源码分析-Dubbo是如何整合spring-framework的">
 <meta name="twitter:description" content="这篇文章是Dubbo源码分析的开端，与其说这篇文章是Dubbo源码分析，不如是spring源码分析，因为大部分都是在分析spring如何解析xml配置文件的，为了与后面的Dubbo源码分析保持一致，估且这样命名了使用Dubbo框架开发分布式服务时，一般使用spring进行管理，在spring的配置文件中进行配置，例如服务提供者Provider端配置如下: 123456789101112131415">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6752673-7db0ebafebf071b3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
@@ -137,7 +138,7 @@
   };
 </script>
 
-  <title> | 半亩方塘</title>
+  <title>Dubbo源码分析-Dubbo是如何整合spring-framework的 | 半亩方塘</title>
   
 
 
@@ -328,7 +329,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
+          <h2 class="post-title" itemprop="name headline">Dubbo源码分析-Dubbo是如何整合spring-framework的
               
             
           </h2>
@@ -353,12 +354,30 @@
                 
               
 
-              <time title="创建时间：2018-07-19 23:11:36" itemprop="dateCreated datePublished" datetime="2018-07-19T23:11:36+08:00">2018-07-19</time>
+              <time title="创建时间：2018-07-19 22:29:03" itemprop="dateCreated datePublished" datetime="2018-07-19T22:29:03+08:00">2018-07-19</time>
             
 
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/dubbo/" itemprop="url" rel="index"><span itemprop="name">dubbo</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -377,7 +396,7 @@
 
           
           
-             <span id="/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/" class="leancloud_visitors" data-flag-title="Dubbo源码分析-Dubbo是如何整合spring-framework的">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -447,7 +466,7 @@
     <strong>本文作者： </strong>Mr.Yang</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://cool-coding.github.io/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/" title="">https://cool-coding.github.io/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/</a>
+    <a href="https://cool-coding.github.io/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/" title="Dubbo源码分析-Dubbo是如何整合spring-framework的">https://cool-coding.github.io/2018/07/19/Dubbo源码分析-Dubbo是如何整合spring-framework的/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -457,6 +476,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
       
 
       
@@ -574,7 +601,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -611,7 +640,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
