@@ -359,6 +359,24 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -408,9 +426,27 @@
 
       
         
-          
-            
-          
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>远程桌面控制的产品已经有很多很多，我做此项目的初衷并不是要开发出一个商用的产品，只是出于兴趣爱好，做一个开源的项目，之前也没有阅读过任何远程桌面控制的项目源码，只是根据自己已有的经验设计开发，肯定有许多不足，有兴趣的朋友欢迎留言讨论。</p>
+<h2 id="初现端倪"><a href="#初现端倪" class="headerlink" title="初现端倪"></a>初现端倪</h2><p>一般需要远程控制的场景发生在公司和家之间，由于公司和家里的电脑一般都在局域网内，所以不能直接相连，需要第三方中转，所以至少有三方,如下图。<br><img src="https://upload-images.jianshu.io/upload_images/6752673-bdfc1646a00bd3d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>负责中转的第三方是服务器，控制端和傀儡端(被控制端)相对于服务器来说都是客户端，都和服务器直接相连，也就是说控制端不和傀儡端相连。</p>
+<h2 id="款款深入"><a href="#款款深入" class="headerlink" title="款款深入"></a>款款深入</h2><blockquote>
+<p><strong>约定:</strong></p>
+<ul>
+<li>控制端M(Master)</li>
+<li>服务器S(Server)</li>
+<li>傀儡端P(Puppet)</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>为了叙述方便,以下如不做特别说明,M表示控制端,S表示服务端,P表示傀儡端。</strong></p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/07/远程桌面项目开发-Spring-Netty-Swing/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2232,7 +2268,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
