@@ -306,6 +306,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/11/01/Prometheus-Grafana打造Mysql监控平台/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半亩方塘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/Prometheus-Grafana打造Mysql监控平台/" itemprop="url">
+                  Prometheus+Grafana打造Mysql监控平台
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-01 22:06:48" itemprop="dateCreated datePublished" datetime="2018-11-01T22:06:48+08:00">2018-11-01</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/devops/" itemprop="url" rel="index"><span itemprop="name">devops</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/01/Prometheus-Grafana打造Mysql监控平台/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/01/Prometheus-Grafana打造Mysql监控平台/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/11/01/Prometheus-Grafana打造Mysql监控平台/" class="leancloud_visitors" data-flag-title="Prometheus+Grafana打造Mysql监控平台">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <ol start="0">
+<li>prometheus/node_exporter/mysqld_exporter都是由go语言编写，需要先安装GoLang环境</li>
+<li>下载<a href="https://github.com/prometheus/node_exporter" target="_blank" rel="noopener">node_exporter</a>(监控服务器的CPU、内存、存储使用情况)和<a href="https://github.com/prometheus/mysqld_exporter" target="_blank" rel="noopener">mysqld_exporter</a>放到Mysql服务器(被监控端)</li>
+</ol>
+<ul>
+<li><p>需要为mysqld_exporter在Mysql数据库新建一个用户,并赋予相应权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &apos;exporter&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;XXXXXXXX&apos; WITH MAX_USER_CONNECTIONS 3;</span><br><span class="line">GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO &apos;exporter&apos;@&apos;localhost&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置mysql_exporter启动时连接mysql的用户名和密码</p>
+<ul>
+<li><p>环境变量方式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export DATA_SOURCE_NAME=<span class="string">'user:password@(hostname:3306)/'</span></span><br><span class="line">./mysqld_exporter &lt;flags&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置.my.cnf文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">user=exporter</span><br><span class="line">password=exporter</span><br><span class="line"></span><br><span class="line"> 然后启动mysqld_exporter</span><br><span class="line"> mysqld_exporter -config.my-cnf=&quot;.my.cnf&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/01/Prometheus-Grafana打造Mysql监控平台/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/09/10/Dubbo2-7源码分析-如何发布服务/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1967,186 +2163,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2017/12/02/Java多线程应用示例-抽奖/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mr.Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半亩方塘">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/02/Java多线程应用示例-抽奖/" itemprop="url">
-                  Java多线程应用示例-抽奖
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-12-02 22:38:21" itemprop="dateCreated datePublished" datetime="2017-12-02T22:38:21+08:00">2017-12-02</time>
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/02/Java多线程应用示例-抽奖/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/12/02/Java多线程应用示例-抽奖/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/12/02/Java多线程应用示例-抽奖/" class="leancloud_visitors" data-flag-title="Java多线程应用示例-抽奖">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>这里用java多线程实现一个简单的抽奖程序，从100个座位号中，随机抽取10位。<br>我设计的思路是用10个线程，每个线程从100个座位号中随机抽取1位，然后显示在黑板上，然后再去抽取，再显示。这里涉及到从100 个座位号中随机抽取时要线程之间要同步，否则会出现同一个号被多个线程抽取。一个线程大致分为如下几个步骤：<br>a.从待抽取的座位列表中随机抽取座位。<br>b.将抽取的座位号显示在黑板对应的位置上，并取得那个位置上当前显示的座位号。<br>c.将b步得到的座位号添加到待抽取列表中。</p>
-<p>经过a,b,c三步，一个线程一次的动作算完成了，将这三步操作视为一个原子操作，进行线程间同步，剩下的就是循环抽取座位号就行了。</p>
-<p>有几点需求注意：<br>1.b步可以不同步，但发现，当随机抽取的数量多时，此时一个线程（假设代号为1）还没有来得及更新黑板上对应位置的座位号，另一个线程（假设代号为2）已经将1线程放入座位组中的号又取出来，并显示在黑板上了。这样就会造成黑板上同一个座位号显示了多次。<br>2.需要区分哪些座位号是抽取过的，哪些座位号是没有抽取过的，这样每次抽取只抽取没有抽取过的。会自然而然的用两个List表示。但仔细想想，不需要用两个List区分，因为黑板上显示的座位号就是已经抽取的，只需要每次从座位池中删除，然后显示在黑板上，再次抽取时，将黑板上原来显示的座位号放回座位池中即可。<br>3.是否可以用LinkedList代替ArrayList。大家都知道LinkedList的删除，插入性能优于ArrayList,并且这里线程也需要反复不断的对座位池进行删除，新增操作。但这里的新增只是在最后面加入，影响不大，有影响的就是删除操作。但是这样还会有不断的随机取号操作。到底是删除操作影响大，还是取号操作影响大呢？经过验证发现，当座位池中座位号比较大时(假如为10万)，LinkedList速度会明显慢于ArrayList,几乎有10倍之差。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/02/Java多线程应用示例-抽奖/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2198,7 +2214,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2227,7 +2243,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2272,7 +2290,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
