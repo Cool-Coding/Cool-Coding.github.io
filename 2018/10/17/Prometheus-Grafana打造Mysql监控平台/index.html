@@ -108,25 +108,29 @@
 
 
 
-  <meta name="description" content="Hive支持自定义map与reduce script。接下来我用一个简单的wordcount例子加以说明。使用Python开发(如果使用Java开发，请看这里)。1234开发环境:python:2.7.5hive:2.3.0hadoop:2.8.1 ###一、map与reduce脚本map脚本(mapper.py)123456789101112#!/usr/bin/pythonimport sys">
-<meta name="keywords" content="udf">
+  <meta name="description" content="prometheus/node_exporter/mysqld_exporter都是由go语言编写，需要先安装GoLang环境 下载node_exporter(监控服务器的CPU、内存、存储使用情况)和mysqld_exporter放到Mysql服务器(被监控端)   需要为mysqld_exporter在Mysql数据库新建一个用户,并赋予相应权限 12CREATE USER &amp;apos;ex">
+<meta name="keywords" content="mysql,prometheus,grafana">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hive中自定义Map&#x2F;Reduce示例 In Python">
-<meta property="og:url" content="https://cool-coding.github.io/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/index.html">
+<meta property="og:title" content="Prometheus+Grafana打造Mysql监控平台">
+<meta property="og:url" content="https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/index.html">
 <meta property="og:site_name" content="半亩方塘">
-<meta property="og:description" content="Hive支持自定义map与reduce script。接下来我用一个简单的wordcount例子加以说明。使用Python开发(如果使用Java开发，请看这里)。1234开发环境:python:2.7.5hive:2.3.0hadoop:2.8.1 ###一、map与reduce脚本map脚本(mapper.py)123456789101112#!/usr/bin/pythonimport sys">
+<meta property="og:description" content="prometheus/node_exporter/mysqld_exporter都是由go语言编写，需要先安装GoLang环境 下载node_exporter(监控服务器的CPU、内存、存储使用情况)和mysqld_exporter放到Mysql服务器(被监控端)   需要为mysqld_exporter在Mysql数据库新建一个用户,并赋予相应权限 12CREATE USER &amp;apos;ex">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-23T14:33:33.144Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-5a4e32b4a385100a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-8b0fe4b728c28952.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-3677f83feccfc694.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-11-01T14:16:08.258Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hive中自定义Map&#x2F;Reduce示例 In Python">
-<meta name="twitter:description" content="Hive支持自定义map与reduce script。接下来我用一个简单的wordcount例子加以说明。使用Python开发(如果使用Java开发，请看这里)。1234开发环境:python:2.7.5hive:2.3.0hadoop:2.8.1 ###一、map与reduce脚本map脚本(mapper.py)123456789101112#!/usr/bin/pythonimport sys">
+<meta name="twitter:title" content="Prometheus+Grafana打造Mysql监控平台">
+<meta name="twitter:description" content="prometheus/node_exporter/mysqld_exporter都是由go语言编写，需要先安装GoLang环境 下载node_exporter(监控服务器的CPU、内存、存储使用情况)和mysqld_exporter放到Mysql服务器(被监控端)   需要为mysqld_exporter在Mysql数据库新建一个用户,并赋予相应权限 12CREATE USER &amp;apos;ex">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6752673-5a4e32b4a385100a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
 
 
 
-  <link rel="canonical" href="https://cool-coding.github.io/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/"/>
+  <link rel="canonical" href="https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/"/>
 
 
 
@@ -136,7 +140,7 @@
   };
 </script>
 
-  <title>Hive中自定义Map/Reduce示例 In Python | 半亩方塘</title>
+  <title>Prometheus+Grafana打造Mysql监控平台 | 半亩方塘</title>
   
 
 
@@ -310,7 +314,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/">
+    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mr.Yang">
@@ -327,7 +331,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Hive中自定义Map/Reduce示例 In Python
+          <h2 class="post-title" itemprop="name headline">Prometheus+Grafana打造Mysql监控平台
               
             
           </h2>
@@ -352,7 +356,7 @@
                 
               
 
-              <time title="创建时间：2017-11-27 22:32:32" itemprop="dateCreated datePublished" datetime="2017-11-27T22:32:32+08:00">2017-11-27</time>
+              <time title="创建时间：2018-10-17 22:06:48" itemprop="dateCreated datePublished" datetime="2018-10-17T22:06:48+08:00">2018-10-17</time>
             
 
             
@@ -370,7 +374,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hive/" itemprop="url" rel="index"><span itemprop="name">hive</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/devops/" itemprop="url" rel="index"><span itemprop="name">devops</span></a></span>
 
                 
                 
@@ -385,8 +389,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/" itemprop="commentCount"></span>
+                <a href="/2018/10/17/Prometheus-Grafana打造Mysql监控平台/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/17/Prometheus-Grafana打造Mysql监控平台/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -394,7 +398,7 @@
 
           
           
-             <span id="/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/" class="leancloud_visitors" data-flag-title="Hive中自定义Map/Reduce示例 In Python">
+             <span id="/2018/10/17/Prometheus-Grafana打造Mysql监控平台/" class="leancloud_visitors" data-flag-title="Prometheus+Grafana打造Mysql监控平台">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -425,12 +429,41 @@
       
 
       
-        <p>Hive支持自定义map与reduce script。接下来我用一个简单的wordcount例子加以说明。使用Python开发(如果使用Java开发，请看<a href="http://www.jianshu.com/p/7f557298a487" target="_blank" rel="noopener">这里</a>)。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">开发环境:</span><br><span class="line">python:2.7.5</span><br><span class="line">hive:2.3.0</span><br><span class="line">hadoop:2.8.1</span><br></pre></td></tr></table></figure></p>
-<p>###一、map与reduce脚本<br><strong>map脚本</strong>(mapper.py)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> sys </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">   line = sys.stdin.readline().strip()</span><br><span class="line">   <span class="keyword">if</span> <span class="keyword">not</span> line:</span><br><span class="line">     <span class="keyword">break</span></span><br><span class="line">   p = re.compile(<span class="string">r'\W+'</span>)</span><br><span class="line">   words=p.split(line)</span><br><span class="line">   <span class="comment">#write the tuples to stdout</span></span><br><span class="line">   <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">     <span class="keyword">print</span> <span class="string">'%s\t%s'</span> % (word, <span class="string">"1"</span>)</span><br></pre></td></tr></table></figure></p>
+        <ol start="0">
+<li>prometheus/node_exporter/mysqld_exporter都是由go语言编写，需要先安装GoLang环境</li>
+<li>下载<a href="https://github.com/prometheus/node_exporter" target="_blank" rel="noopener">node_exporter</a>(监控服务器的CPU、内存、存储使用情况)和<a href="https://github.com/prometheus/mysqld_exporter" target="_blank" rel="noopener">mysqld_exporter</a>放到Mysql服务器(被监控端)</li>
+</ol>
+<ul>
+<li><p>需要为mysqld_exporter在Mysql数据库新建一个用户,并赋予相应权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &apos;exporter&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;XXXXXXXX&apos; WITH MAX_USER_CONNECTIONS 3;</span><br><span class="line">GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO &apos;exporter&apos;@&apos;localhost&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置mysql_exporter启动时连接mysql的用户名和密码</p>
+<ul>
+<li><p>环境变量方式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export DATA_SOURCE_NAME=<span class="string">'user:password@(hostname:3306)/'</span></span><br><span class="line">./mysqld_exporter &lt;flags&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置.my.cnf文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">user=exporter</span><br><span class="line">password=exporter</span><br><span class="line"></span><br><span class="line"> 然后启动mysqld_exporter</span><br><span class="line"> mysqld_exporter -config.my-cnf=&quot;.my.cnf&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
 <a id="more"></a>
-<p><strong>reduce脚本</strong>(reducer.py)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> sys </span><br><span class="line"></span><br><span class="line"><span class="comment"># maps words to their counts</span></span><br><span class="line">word2count = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    line=sys.stdin.readline().strip()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> line:</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line">    <span class="comment"># parse the input we got from mapper.py</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        word,count= line.split(<span class="string">'\t'</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># convert count (currently a string) to int</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        count = int(filter(str.isdigit,count))</span><br><span class="line">    <span class="keyword">except</span> ValueError:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        word2count[word] = word2count[word]+count</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        word2count[word] = count</span><br><span class="line"></span><br><span class="line"><span class="comment"># write the tuples to stdout</span></span><br><span class="line"><span class="comment"># Note: they are unsorted</span></span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> word2count.keys():</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'%s\t%s'</span> % ( word, word2count[word] )</span><br></pre></td></tr></table></figure></p>
-<p>注意一点的是，不能使用for line in std.in，因为for是一个字节一个字节的读取，而不是一行一行地读。而且在对map输出的word,count进行拆分时，要注意将拆分的count部分非数字部分去掉，以免count转换成int错误。</p>
-<p>###二、编写hive hql<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists raw_lines;</span><br><span class="line"></span><br><span class="line">-- create table raw_line, <span class="keyword">and</span> read all the lines <span class="keyword">in</span> <span class="string">'/user/inputs'</span>, this <span class="keyword">is</span> the path on your local HDFS</span><br><span class="line">create external table <span class="keyword">if</span> <span class="keyword">not</span> exists raw_lines(line string)</span><br><span class="line">ROW FORMAT DELIMITED</span><br><span class="line">stored <span class="keyword">as</span> textfile</span><br><span class="line">location <span class="string">'/user/inputs'</span>;</span><br><span class="line"></span><br><span class="line">drop table <span class="keyword">if</span> exists word_count;</span><br><span class="line"></span><br><span class="line">-- create table word_count, this <span class="keyword">is</span> the output table which will be put <span class="keyword">in</span> <span class="string">'/user/outputs'</span> <span class="keyword">as</span> a text file, this <span class="keyword">is</span> the path on your local HDFS</span><br><span class="line"></span><br><span class="line">create external table <span class="keyword">if</span> <span class="keyword">not</span> exists word_count(word string, count int)</span><br><span class="line"> ROW FORMAT DELIMITED</span><br><span class="line"> FIELDS TERMINATED BY <span class="string">'\t'</span></span><br><span class="line"> lines terminated by <span class="string">'\n'</span> STORED AS TEXTFILE LOCATION <span class="string">'/user/outputs/'</span>;</span><br><span class="line"></span><br><span class="line">-- add the mapper&amp;reducer scripts <span class="keyword">as</span> resources, please change your/local/path</span><br><span class="line">add file /home/yanggy/mapper.py;</span><br><span class="line">add file /home/yanggy/reducer.py;</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> (</span><br><span class="line">        <span class="keyword">from</span> raw_lines</span><br><span class="line">        map raw_lines.line</span><br><span class="line">        --call the mapper here</span><br><span class="line">        using <span class="string">'mapper.py'</span></span><br><span class="line">        <span class="keyword">as</span> word, count</span><br><span class="line">        cluster by word) map_output</span><br><span class="line">insert overwrite table word_count</span><br><span class="line">reduce map_output.word, map_output.count</span><br><span class="line">--call the reducer here</span><br><span class="line">using <span class="string">'reducer.py'</span></span><br><span class="line"><span class="keyword">as</span> word,count;</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>下载<a href="https://prometheus.io/download/" target="_blank" rel="noopener">Prometheus</a>放到监控端(或被监控端)。</li>
+</ol>
+<ul>
+<li><p>配置文件prometheus.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">prometheus</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line"><span class="attr">      - targets:</span> <span class="string">['localhost:9090']</span></span><br><span class="line"><span class="attr">        labels:</span></span><br><span class="line"><span class="attr">          instance:</span> <span class="string">prometheus</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">linux</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line">     <span class="comment"># 192.168.1.7为node_exporter所在服务器的IP;9100为node_exporter暴露的端口</span></span><br><span class="line"><span class="attr">      - targets:</span> <span class="string">['192.168.1.7:9100']</span></span><br><span class="line"><span class="attr">        labels:</span></span><br><span class="line">          <span class="comment">#db1为实例名，以后在Grafana获取prometheus时，要配置prometheus所有服务器的host为db1</span></span><br><span class="line"><span class="attr">          instance:</span> <span class="string">db1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - job_name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">    static_configs:</span></span><br><span class="line">     <span class="comment"># 192.168.1.7为mysqld_exporter所在服务器的IP;9100为mysqld_exporter暴露的端口</span></span><br><span class="line"><span class="attr">      - targets:</span> <span class="string">['192.168.1.7:9104']</span></span><br><span class="line"><span class="attr">        labels:</span></span><br><span class="line"><span class="attr">          instance:</span> <span class="string">db1</span></span><br><span class="line"><span class="string">```</span> </span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> <span class="string">启动prometheus,并查看配置的Linux和Mysql节点状态是否为Up</span></span><br><span class="line"><span class="number">4.</span> <span class="string">下载[Grafana](http://docs.grafana.org/installation/)，并按文档安装</span></span><br><span class="line"><span class="number">5.</span> <span class="string">下载Percona提供的[Dashboards](https://github.com/percona/grafana-dashboards)</span></span><br><span class="line"><span class="string">![datasource](https://upload-images.jianshu.io/upload_images/6752673-6238531fa50d6b7a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</span></span><br><span class="line"><span class="string">如果grafana与prometheus不在一台服务器，需要指定prometheus的主机名(此例中应该为db1),access要选择proxy，表示由grafana处理请求，而不是直接请求prometheus。</span></span><br><span class="line"></span><br><span class="line"><span class="number">6.</span> <span class="string">启动Grafana，并添加Prometheus数据源(注意必须为"Prometheus"，因为Percona提供的dashboards使用的是Prometheus数据源)</span></span><br><span class="line"></span><br><span class="line"><span class="number">7.</span> <span class="string">正常情况下可以看见Mysql和System的仪表盘，如果显示不出来,请检查下面几个方面</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">检查Grafana和grafana-dashboards版本(grafana-4.2</span> <span class="string">匹配grafana-dashboards-1.3.2，不匹配当前最新版本1.15).</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">Grafana使用grafana用户运行，所以需要检查/etc/grafana,/var/lib/grafana,/usr/grafana目录所有者和用户组是否是grafana</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">对于grafana</span> <span class="number">3.</span><span class="string">X版本，还需要做如下处理，参见[grafana-dashboards](https://github.com/percona/grafana-dashboards)</span></span><br><span class="line"></span><br><span class="line"><span class="string">```java</span></span><br><span class="line"><span class="string">sed</span> <span class="bullet">-i</span> <span class="string">'s/expr=\(.\)\.replace(\(.\)\.expr,\(.\)\.scopedVars\(.*\)var \(.\)=\(.\)\.interval/expr=\1.replace(\2.expr,\3.scopedVars\4var \5=\1.replace(\6.interval, \3.scopedVars)/'</span> <span class="string">/usr/share/grafana/public/app/plugins/datasource/prometheus/datasource.js</span></span><br><span class="line"><span class="string">sed</span> <span class="bullet">-i</span> <span class="string">'s/,range_input/.replace(\/"&#123;\/g,"\\"").replace(\/&#125;"\/g,"\\""),range_input/; s/step_input:""/step_input:this.target.step/'</span> <span class="string">/usr/share/grafana/public/app/plugins/datasource/prometheus/query_ctrl.js</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>grafana所有服务器是否配置prometheus所有服务器的IP与Host映射，如上的Prometheus的配置，host应该配置成db1</p>
+</li>
+</ul>
+<ol start="8">
+<li>安装成功结果如下图：<br><img src="https://upload-images.jianshu.io/upload_images/6752673-5a4e32b4a385100a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mysql overview"></li>
+</ol>
+<p><img src="https://upload-images.jianshu.io/upload_images/6752673-8b0fe4b728c28952.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="system overview"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6752673-3677f83feccfc694.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mysql innodb metrics"></p>
 
       
     </div>
@@ -451,7 +484,7 @@
     <strong>本文作者： </strong>Mr.Yang</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://cool-coding.github.io/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/" title="Hive中自定义Map/Reduce示例 In Python">https://cool-coding.github.io/2017/11/27/Hive中自定义Map-Reduce示例-In-Python/</a>
+    <a href="https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/" title="Prometheus+Grafana打造Mysql监控平台">https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -464,7 +497,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/udf/" rel="tag"># udf</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+            <a href="/tags/grafana/" rel="tag"># grafana</a>
           
         </div>
       
@@ -477,8 +514,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/24/Hive中自定义Map-Reduce示例-In-Java/" rel="next" title="Hive中自定义Map/Reduce示例 In Java">
-                <i class="fa fa-chevron-left"></i> Hive中自定义Map/Reduce示例 In Java
+              <a href="/2018/09/10/Dubbo2-7源码分析-如何发布服务/" rel="next" title="Dubbo2.7源码分析-如何发布服务">
+                <i class="fa fa-chevron-left"></i> Dubbo2.7源码分析-如何发布服务
               </a>
             
           </div>
@@ -486,10 +523,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/02/Java多线程应用示例-抽奖/" rel="prev" title="Java多线程应用示例-抽奖">
-                Java多线程应用示例-抽奖 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
