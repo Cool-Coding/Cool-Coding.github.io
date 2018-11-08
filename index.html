@@ -306,6 +306,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半亩方塘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/08/一道老生常谈有意思的面试题思考/" itemprop="url">
+                  一道老生常谈有意思的面试题思考
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-08 22:55:23" itemprop="dateCreated datePublished" datetime="2018-11-08T22:55:23+08:00">2018-11-08</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/08/一道老生常谈有意思的面试题思考/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/08/一道老生常谈有意思的面试题思考/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/11/08/一道老生常谈有意思的面试题思考/" class="leancloud_visitors" data-flag-title="一道老生常谈有意思的面试题思考">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>   有一栋楼共N层，一个鸡蛋从第M层及以上的楼层落下来会摔破， 在第M层以下的楼层落下不会摔破。给你Q个鸡蛋，设计方案找出M，并且保证在最坏情况下， 最小化鸡蛋下落的次数。</p>
+<p>这道题目经常在面试中问到，很多博客也给出了答案，但总感觉不全面，没有讲透彻，依据前人经验和自己的理解，从思路和实现两个方面进行思考，看一看采取哪一种算法合适。</p>
+<blockquote>
+<p>为了简化问题，先假定有2个鸡蛋，100层楼。</p>
+</blockquote>
+<p>假设最坏情况下，至多扔k次，那第一次需要在第k层扔下，会有两种情况：</p>
+<ol>
+<li><strong>碎了</strong>。这时只剩下一个鸡蛋，只能从1层，一层层往下扔，最坏情况下从第k-1层扔下，如果在k-1层碎了，那N=k-1,总共扔了k次，如果没碎，那N=k，总共也扔了k次。</li>
+<li><strong>没碎</strong>。这时手上还有2个鸡蛋，从k+1层开始往下扔，还可以扔k-1次，1到k层，最多扔k次，k-1次最多扔k-1层，所以第二次在k+k-1层往下扔，如果第二次扔没碎，第三次在k+k-1+k-2=3k-3层上扔，依此类推。<br>所以得出，2个鸡蛋的时候，k次机会，最多可以从$k+k-1+k-2+k-3+….+1 = \frac{k(k+1)} {2}$层扔下，只要找到最小的k，使$\frac{k(k+1)} {2} &gt;= 100 $，就找到了第一次扔的k层,容易得到k=14。<br>这样就能保证在找到M时，扔的次数最多不超过14次。</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/08/一道老生常谈有意思的面试题思考/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/10/17/Prometheus-Grafana打造Mysql监控平台/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1985,184 +2174,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/01/18/Lock应用示例-生产者与消费者/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mr.Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半亩方塘">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/18/Lock应用示例-生产者与消费者/" itemprop="url">
-                  Lock应用示例-生产者与消费者
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-01-18 11:12:29" itemprop="dateCreated datePublished" datetime="2018-01-18T11:12:29+08:00">2018-01-18</time>
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/18/Lock应用示例-生产者与消费者/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/01/18/Lock应用示例-生产者与消费者/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/01/18/Lock应用示例-生产者与消费者/" class="leancloud_visitors" data-flag-title="Lock应用示例-生产者与消费者">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Java Lock的使用以及与synchronized的区别很多文章已经讲解的很清楚了，这里不再详细讲解，可以参考<a href="http://www.cnblogs.com/dolphin0520/p/3923167.html" target="_blank" rel="noopener">java Lock讲解</a>.<br>总的来说Lock的功能比synchronized更强大，功能更多，但一般的线程同步业务synchronized已经能够满足，对于一些特殊的要求，比如要知道线程获取锁的结果，线程获取锁时没有获取到，要求等待一段时间后仍没获取到就不去获取了，去做别的事情或者等待锁的过程中能够响应中断等等。Lock接口中的newCondition()方法用于获取锁对象上绑定的实例，用于线程的等待与唤醒，可以获取多个实例，而不是像synchronized只有一个锁对象(此时锁对象既是锁对象也是实例)，好处是线程可以使用不同的实例，进行有针对的等待与唤醒，Lock接口唯一的实现类是ReentrantLock，下面我使用这个类来实现经典的生产者与消费者。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/01/18/Lock应用示例-生产者与消费者/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2214,7 +2225,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2245,7 +2256,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2296,7 +2309,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

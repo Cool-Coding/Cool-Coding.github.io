@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="题目   有一栋楼共N层，一个鸡蛋从第M层及以上的楼层落下来会摔破， 在第M层以下的楼层落下不会摔破。给你Q个鸡蛋，设计方案找出M，并且保证在最坏情况下， 最小化鸡蛋下落的次数。 这道题目经常在面试中问到，很多博客也给出了答案，但总感觉不全面，没有讲透彻，依据前人经验和自己的理解，从思路和实现两个方面进行思考，看一看采取哪一种算法合适。  为了简化问题，先假定有2个鸡蛋，100层楼。  假设最">
+<meta name="keywords" content="动态规划,递归">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一道老生常谈有意思的面试题思考">
+<meta property="og:url" content="https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/index.html">
+<meta property="og:site_name" content="半亩方塘">
+<meta property="og:description" content="题目   有一栋楼共N层，一个鸡蛋从第M层及以上的楼层落下来会摔破， 在第M层以下的楼层落下不会摔破。给你Q个鸡蛋，设计方案找出M，并且保证在最坏情况下， 最小化鸡蛋下落的次数。 这道题目经常在面试中问到，很多博客也给出了答案，但总感觉不全面，没有讲透彻，依据前人经验和自己的理解，从思路和实现两个方面进行思考，看一看采取哪一种算法合适。  为了简化问题，先假定有2个鸡蛋，100层楼。  假设最">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-08T15:00:58.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一道老生常谈有意思的面试题思考">
+<meta name="twitter:description" content="题目   有一栋楼共N层，一个鸡蛋从第M层及以上的楼层落下来会摔破， 在第M层以下的楼层落下不会摔破。给你Q个鸡蛋，设计方案找出M，并且保证在最坏情况下， 最小化鸡蛋下落的次数。 这道题目经常在面试中问到，很多博客也给出了答案，但总感觉不全面，没有讲透彻，依据前人经验和自己的理解，从思路和实现两个方面进行思考，看一看采取哪一种算法合适。  为了简化问题，先假定有2个鸡蛋，100层楼。  假设最">
+
+
+
+
+
+
+  <link rel="canonical" href="https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>一道老生常谈有意思的面试题思考 | 半亩方塘</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119765145-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119765145-1');
+</script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">半亩方塘</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">Stay foolish,Stay hungry</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半亩方塘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">一道老生常谈有意思的面试题思考
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-08 22:55:23" itemprop="dateCreated datePublished" datetime="2018-11-08T22:55:23+08:00">2018-11-08</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/08/一道老生常谈有意思的面试题思考/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/08/一道老生常谈有意思的面试题思考/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/11/08/一道老生常谈有意思的面试题思考/" class="leancloud_visitors" data-flag-title="一道老生常谈有意思的面试题思考">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>   有一栋楼共N层，一个鸡蛋从第M层及以上的楼层落下来会摔破， 在第M层以下的楼层落下不会摔破。给你Q个鸡蛋，设计方案找出M，并且保证在最坏情况下， 最小化鸡蛋下落的次数。</p>
+<p>这道题目经常在面试中问到，很多博客也给出了答案，但总感觉不全面，没有讲透彻，依据前人经验和自己的理解，从思路和实现两个方面进行思考，看一看采取哪一种算法合适。</p>
+<blockquote>
+<p>为了简化问题，先假定有2个鸡蛋，100层楼。</p>
+</blockquote>
+<p>假设最坏情况下，至多扔k次，那第一次需要在第k层扔下，会有两种情况：</p>
+<ol>
+<li><strong>碎了</strong>。这时只剩下一个鸡蛋，只能从1层，一层层往下扔，最坏情况下从第k-1层扔下，如果在k-1层碎了，那N=k-1,总共扔了k次，如果没碎，那N=k，总共也扔了k次。</li>
+<li><strong>没碎</strong>。这时手上还有2个鸡蛋，从k+1层开始往下扔，还可以扔k-1次，1到k层，最多扔k次，k-1次最多扔k-1层，所以第二次在k+k-1层往下扔，如果第二次扔没碎，第三次在k+k-1+k-2=3k-3层上扔，依此类推。<br>所以得出，2个鸡蛋的时候，k次机会，最多可以从$k+k-1+k-2+k-3+….+1 = \frac{k(k+1)} {2}$层扔下，只要找到最小的k，使$\frac{k(k+1)} {2} &gt;= 100 $，就找到了第一次扔的k层,容易得到k=14。<br>这样就能保证在找到M时，扔的次数最多不超过14次。</li>
+</ol>
+<a id="more"></a>
+<h2 id="第一种思路："><a href="#第一种思路：" class="headerlink" title="第一种思路："></a>第一种思路：</h2><p>   假设$f[n][m]$表示n个鸡蛋，m层时，最坏情况下,至多扔的次数(f是一个二维数组)。<br>   $f[2][100]=1+max(f[1][k-1],f[2][100-k];(k为第一次扔的楼层)$</p>
+<blockquote>
+<ul>
+<li>常数1表示第一次在k层扔下了一个鸡蛋。</li>
+<li>f[1][k-1]表示当第一次在k层扔下第一个鸡蛋时，碎了，还剩一个鸡蛋，只能在k-1层楼范围扔了。</li>
+<li>f[2][100-k]表示第一次在k层扔下第一个鸡蛋时没有碎，那么还剩下2个鸡蛋，100-k层楼。</li>
+</ul>
+</blockquote>
+<p>   如果有3个鸡蛋，100层楼时，$f[3][100]=1+max(f[2][k-1],f[3][100-k]);$<br>   可以类推得到$f[n][m]=1+max(f[n-1][k-1],f[n][m-k])$</p>
+<h2 id="第二种思路："><a href="#第二种思路：" class="headerlink" title="第二种思路："></a>第二种思路：</h2><p>  上面已经得到2个鸡蛋，k次机会，最多可以测试$\frac{k(k+1)} {2}$层楼。<br>  假如有3个鸡蛋，k次机会，第一次测试碎了后，只剩下k-1次机会，必须要把剩下的楼层测试完。2个鸡蛋，k-1机会，最多测试$\frac{(k-1)k} {2}$层楼，所以第一次测试的楼层为$\frac{k(k-1)} {2}+1$,如果第一次测试没有碎，第二次增加$\frac{(k-1)(k-2)} {2}+1$层，所以三个鸡蛋，k次机会，总共能够测试的楼层为<br>$$\frac{k(k-1)} {2}+1+ \frac{(k-1)(k-2)} {2}+1+\cdots+\frac{1*0} {2}+1 = \frac{1} {2}<br>\left[<br>\left(1^2+2^2+3^2+\cdots+k^2\right)<br>+<br>\left(1+2+3+\cdots+k\right)-k(k+1)\right]+k = \frac{k^3+5k} {6}$$</p>
+<p><strong>总结</strong><br>   用$f(n,k)$表示n个鸡蛋，第一次在k层楼时，最多扔的楼层数(f是一个函数)。<br>   $f(1,k)=k;$<br>   $f(2,k)=f(1,k-1)+f(1,k-2)+….+f(1,0)+k;$<br>   $f(3,k)=f(2,k-1)+f(2,k-2)+f(2,k-3)+….+f(2,0)+k$<br>   $……$<br>   $……$<br>   $f(n,k)=f(n-1,k-1)+f(n-1,k-2)+….f(n-1,0)+k;$</p>
+<h2 id="两种思路总结"><a href="#两种思路总结" class="headerlink" title="两种思路总结"></a>两种思路总结</h2><pre><code>第一种思路是一种直接的方式，直接求解。   
+第二种思路是一种迂回的方式，求n个鸡蛋，k次最多能测试多少层。   
+</code></pre><h2 id="编码实现"><a href="#编码实现" class="headerlink" title="编码实现"></a>编码实现</h2><blockquote>
+<p>自己对于java最熟悉，就使用java进行编码</p>
+</blockquote>
+<p>先给出两种思路的实现代码，最后再解释。代码中省略对楼层和鸡蛋数量有效性的检查。</p>
+<h3 id="第一种思路"><a href="#第一种思路" class="headerlink" title="第一种思路"></a>第一种思路</h3><p>这一种思路是大多数博客常用的思路，解法也都是动态规划，这里仍然使用动态规划。</p>
+<ul>
+<li>动态规划<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getFloor</span><span class="params">(<span class="keyword">int</span> floorNum,<span class="keyword">int</span> eggNum)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(eggNum &lt; <span class="number">1</span> || floorNum &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//f二维数据存储着eggNum个鸡蛋，从floorNum楼层扔下来最怀情况下，所需最多的次数</span></span><br><span class="line">    <span class="keyword">int</span>[][] f = <span class="keyword">new</span> <span class="keyword">int</span>[eggNum+<span class="number">1</span>][floorNum+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=eggNum; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=floorNum; j++)</span><br><span class="line">            f[i][j] = j;<span class="comment">//初始化，最坏的次数</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> n=<span class="number">2</span>; n&lt;=eggNum; n++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> m=<span class="number">1</span>; m&lt;=floorNum; m++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">1</span>; k&lt;m; k++)&#123;</span><br><span class="line">                f[n][m] = Math.min(f[n][m],<span class="number">1</span>+Math.max(f[n-<span class="number">1</span>][k-<span class="number">1</span>],f[n][m-k]));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f[eggNum][floorNum];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="第二种思路"><a href="#第二种思路" class="headerlink" title="第二种思路"></a>第二种思路</h3><p> 这一种思路，考虑使用递归和动态规划,动态规划用了两种方式实现。</p>
+<ul>
+<li><p>递归(1)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 递归</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> floorNum 楼层数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> eggNum  鸡蛋数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 在最怀情况下，鸡蛋最多下落的次数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">getFloor</span><span class="params">(<span class="keyword">int</span> floorNum,<span class="keyword">int</span> eggNum)</span></span>&#123;</span><br><span class="line">   <span class="comment">//从1层依次往上计算最大测试楼层</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=floorNum;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(maxFloor(eggNum,i)&gt;=floorNum)&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * eggNum鸡蛋,k次尝试最大能测试的楼层数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> eggNum 鸡蛋数量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k      尝试次数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>       最大测试的楼层数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">maxFloor</span><span class="params">(<span class="keyword">int</span> eggNum,<span class="keyword">int</span> k)</span></span>&#123;      </span><br><span class="line">    <span class="comment">//f(1,k)=k</span></span><br><span class="line">    <span class="keyword">if</span> (eggNum==<span class="number">1</span>) <span class="keyword">return</span> k ;</span><br><span class="line">    <span class="keyword">int</span> result=<span class="number">0</span>;</span><br><span class="line">   </span><br><span class="line">    <span class="comment">//计算f(eggNum,k)=f(eggNum-1,k-1)+f(eggNum-1,k-2)+....f(eggNum-1,0)+k</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;i++)&#123;</span><br><span class="line">        result += maxFloor(eggNum-<span class="number">1</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    result += k;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>动态规划(1)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 动态规划</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> floorNum 楼层数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> eggNum  鸡蛋数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 在最怀情况下，鸡蛋最多下落的次数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getFloor</span><span class="params">(<span class="keyword">int</span> floorNum,<span class="keyword">int</span> eggNum)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[][] f=<span class="keyword">new</span> <span class="keyword">int</span>[eggNum+<span class="number">1</span>][floorNum+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=floorNum;j++)&#123;</span><br><span class="line">        f[<span class="number">1</span>][j]=j;</span><br><span class="line">        f[<span class="number">0</span>][j]=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (eggNum==<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> floorNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=eggNum;i++)&#123;</span><br><span class="line">        f[i][<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="comment">//从低层依次住上下落</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=floorNum;j++)&#123;</span><br><span class="line">            f[i][j]=<span class="number">0</span>;</span><br><span class="line">            <span class="comment">//计算f(eggNum,k)=f(eggNum-1,k-1)+f(eggNum-1,k-2)+....+f(eggNum-1,0)+k</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> q=<span class="number">1</span>;q&lt;=j;q++)&#123;</span><br><span class="line">                f[i][j] += f[i-<span class="number">1</span>][q-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            f[i][j] +=j;<span class="comment">//此处使用j,开始写成了k</span></span><br><span class="line">            <span class="comment">//比较第一次在j层落下时，最大测试的楼层数与总楼层数</span></span><br><span class="line">            <span class="keyword">if</span>(f[i][j]&gt;=floorNum)&#123;</span><br><span class="line">                <span class="comment">//如果超过总楼层数且等于鸡蛋数量，则返回，否则不必再计算</span></span><br><span class="line">                <span class="keyword">if</span>(i==eggNum) &#123;</span><br><span class="line">                    <span class="keyword">return</span> j;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>动态规划(2）<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> floorNum 楼层数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> eggNum   鸡蛋数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>         最坏情况下，至多测试的次数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">     <span class="function"><span class="keyword">int</span> <span class="title">getFloor</span><span class="params">(<span class="keyword">int</span> floorNum,<span class="keyword">int</span> eggNum)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=floorNum;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(f(eggNum,i)&gt;=floorNum)&#123;</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> eggNum 鸡蛋数量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k      K次尝试</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>       最大测试的楼层数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> eggNum,<span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[][] f=<span class="keyword">new</span> <span class="keyword">int</span>[eggNum+<span class="number">1</span>][k+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=k;j++)&#123;</span><br><span class="line">        f[<span class="number">1</span>][j]=j;</span><br><span class="line">        f[<span class="number">0</span>][j]=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (eggNum==<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> f[<span class="number">1</span>][k];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=eggNum;i++)&#123;</span><br><span class="line">        f[i][<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=k;j++)&#123;</span><br><span class="line">            f[i][j]=<span class="number">0</span>;</span><br><span class="line">            <span class="comment">//计算f(eggNum,k)=f(eggNum-1,k-1)+f(eggNum-1,k-2)+....+f(eggNum-1,0)+k</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> q=<span class="number">1</span>;q&lt;=j;q++)&#123;</span><br><span class="line">                f[i][j] += f[i-<span class="number">1</span>][q-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            f[i][j] +=j;<span class="comment">//此处使用j,开始写成了k</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> f[eggNum][k];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><blockquote>
+<ul>
+<li>3个鸡蛋，100层楼<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第二种思路-递归:第<span class="number">9</span>层,耗时<span class="number">0</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">1</span>:第<span class="number">9</span>层,耗时<span class="number">0</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">2</span>:第<span class="number">9</span>层,耗时<span class="number">0</span>ms</span><br><span class="line">第一种思路-动态规划:第<span class="number">9</span>层,耗时<span class="number">1</span>ms</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>10个鸡蛋,10000层楼<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第二种思路-递归:第<span class="number">14</span>层,耗时<span class="number">0</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">1</span>:第<span class="number">14</span>层,耗时<span class="number">1</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">2</span>:第<span class="number">14</span>层,耗时<span class="number">0</span>ms</span><br><span class="line">第一种思路-动态规划:第<span class="number">14</span>层,耗时<span class="number">478</span>ms</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>2个鸡蛋,100000层楼<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第二种思路-递归:第<span class="number">447</span>层,耗时<span class="number">2</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">1</span>:第<span class="number">447</span>层,耗时<span class="number">2</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">2</span>:第<span class="number">447</span>层,耗时<span class="number">36</span>ms</span><br><span class="line">第一种思路-动态规划:第<span class="number">447</span>层,耗时<span class="number">5281</span>ms</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>60鸡蛋,10000000层楼<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第二种思路-递归:第<span class="number">24</span>层,耗时<span class="number">102</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">1</span>:第<span class="number">24</span>层,耗时<span class="number">641</span>ms</span><br><span class="line">第二种思路-动态规划<span class="number">2</span>:第<span class="number">24</span>层,耗时<span class="number">16</span>ms</span><br><span class="line">第一种思路运行中.....</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>可以看出，第一种思路实现方式运行是最慢的，因为需要从小到大(eggNum从2开始，floorNum从1开始)循环嵌套计算二维数组每一项的值。而第二种思路动态规划2，当得出的层数较矮时，优势明显，层数比较多时，就慢于第二种思路动态规划1，因为动态规划2，得到的结果楼层越矮时计算的越快，而动态规划1也是嵌套循环计算，但只要计算到可测试最大楼层大于或等于总楼层就停止计算，比第一种思路的动态规划要快。所以没有哪一种算法是最优的，需要根据数据量的多少和算法具体的实现方式来决定采取哪一种实现方法。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Mr.Yang</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/" title="一道老生常谈有意思的面试题思考">https://cool-coding.github.io/2018/11/08/一道老生常谈有意思的面试题思考/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
+          
+            <a href="/tags/递归/" rel="tag"># 递归</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/17/Prometheus-Grafana打造Mysql监控平台/" rel="next" title="Prometheus+Grafana打造Mysql监控平台">
+                <i class="fa fa-chevron-left"></i> Prometheus+Grafana打造Mysql监控平台
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="Mr.Yang" />
+            
+              <p class="site-author-name" itemprop="name">Mr.Yang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/Cool-Coding" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:riguang_2007@163.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一种思路："><span class="nav-text">第一种思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二种思路："><span class="nav-text">第二种思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种思路总结"><span class="nav-text">两种思路总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编码实现"><span class="nav-text">编码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种思路"><span class="nav-text">第一种思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种思路"><span class="nav-text">第二种思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-text">测试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Yang</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'UeyncgsQOpecpcqYK4Y6SMK3-gzGzoHsz',
+        appKey: 'GnpEAuxOzirt3PyRqF9iQlEv',
+        placeholder: '给点建议呗....',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("UeyncgsQOpecpcqYK4Y6SMK3-gzGzoHsz", "GnpEAuxOzirt3PyRqF9iQlEv");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
