@@ -306,6 +306,188 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/01/18/Spark方法aggregate讲解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半亩方塘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/18/Spark方法aggregate讲解/" itemprop="url">
+                  Spark方法aggregate讲解
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-18 14:49:30" itemprop="dateCreated datePublished" datetime="2018-01-18T14:49:30+08:00">2018-01-18</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spark/" itemprop="url" rel="index"><span itemprop="name">spark</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/18/Spark方法aggregate讲解/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/01/18/Spark方法aggregate讲解/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/01/18/Spark方法aggregate讲解/" class="leancloud_visitors" data-flag-title="Spark方法aggregate讲解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>首先看一下Spark官网对该方法的讲解：<img src="http://upload-images.jianshu.io/upload_images/6752673-e1ceef3dbaf63507.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="aggregate(RDD.scala)"></p>
+<p>大致的意思是aggregate接收两个函数，和一个初始化值。seqOp函数用于聚集每一个分区，combOp用于聚集所有分区聚集后的结果。每一个分区的聚集，和最后所有分区的聚集都需要初始化值的参与。<br>举例如下：</p>
+<blockquote>
+<p> <strong>集群环境</strong>:一台Master，三台Worker,在spark-shell中测试<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val  seqOp:(Int,Int)=&gt;Int=&#123;(a,b)=&gt;&#123;println(<span class="string">"seqOp"</span>+a+<span class="string">"\t"</span>+b);math.min(a,b)&#125;&#125;</span><br><span class="line">seqOp: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; val combOp:(Int,Int)=&gt;Int=&#123;(a,b)=&gt;&#123;println(<span class="string">"combOp"</span>+a+<span class="string">"\t"</span>+b);a+b&#125;&#125;</span><br><span class="line">combOp: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; val z=sc.parallelize(List(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>),<span class="number">2</span>)</span><br><span class="line">z: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[<span class="number">5</span>] at parallelize at &lt;console&gt;:<span class="number">24</span></span><br><span class="line"></span><br><span class="line">scala&gt; z.aggregate(<span class="number">3</span>)(seqOp,combOp)</span><br><span class="line">[Stage <span class="number">13</span>:&gt;                                        (<span class="number">0</span> + <span class="number">0</span>) / <span class="number">2</span>]combOp3 <span class="number">1</span></span><br><span class="line">combOp <span class="number">4</span> <span class="number">3</span></span><br><span class="line">res13: Int = <span class="number">7</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/18/Spark方法aggregate讲解/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2018/01/18/Lock应用示例-生产者与消费者/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1911,191 +2093,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cool-coding.github.io/2017/07/28/第2章-MapReduce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mr.Yang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="半亩方塘">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/28/第2章-MapReduce/" itemprop="url">
-                  第2章:MapReduce
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-07-28 22:19:30" itemprop="dateCreated datePublished" datetime="2017-07-28T22:19:30+08:00">2017-07-28</time>
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hadoop/" itemprop="url" rel="index"><span itemprop="name">hadoop</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/28/第2章-MapReduce/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/07/28/第2章-MapReduce/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/07/28/第2章-MapReduce/" class="leancloud_visitors" data-flag-title="第2章:MapReduce">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>MapReduce是一个数据处理的编程模型。这个模型很简单，但也不是简单到不能够支持一些有用的语言。Hadoop能够运行以多种语言写成的MapReduce程序。在这一章中，我们将看看怎样用Java,Ruby,Python语言来写同一个例子。更重要的是，MapReduce程序天生并发运行，这就相当于把能够进行大数据分析的工具交到了某个拥有足够多机器的人手里。</p>
-<p>##气候数据集<br>在我们的例子中，将会写一个程序来挖掘天气数据。天气传感器每一个小时都会在全球的许多地方收集数据，并且也收集了大量的日志数据。这些数据非常适合于用MapReduce分析。因为我们想要处理所有数据，并且这些数据是半结构化的和面向记录的。</p>
-<p>###数据格式<br>我们所使用的数据来自于<a href="https://www.ncdc.noaa.gov/" target="_blank" rel="noopener">国家气候数据中心</a>或称为NCDC。数据以行形式ASCII格式存储，每一行一条记录。这种格式支持丰富的气象属性集合，其中许多属性是可选的，长度可变的。简便起见，我们仅仅关注基本的属性，如温度。温度总是有值并且长度固定。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/28/第2章-MapReduce/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2142,7 +2144,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2230,7 +2232,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2284,7 +2288,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
