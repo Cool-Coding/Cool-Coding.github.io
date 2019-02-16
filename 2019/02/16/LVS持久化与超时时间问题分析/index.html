@@ -108,13 +108,13 @@
 
 
 
-  <meta name="description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图：可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示时，我分别使用">
+  <meta name="description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图： 2.问题现象可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示">
 <meta name="keywords" content="lvs">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LVS持久化与超时时间问题分析">
 <meta property="og:url" content="https://cool-coding.github.io/2019/02/16/LVS持久化与超时时间问题分析/index.html">
 <meta property="og:site_name" content="半亩方塘">
-<meta property="og:description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图：可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示时，我分别使用">
+<meta property="og:description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图： 2.问题现象可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-7c9270acce4d40a4.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/612/format/webp">
@@ -124,10 +124,10 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-41c734a56348d7f4.gif?imageMogr2/auto-orient/strip">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-51109508f3b2422e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-873df301b335c6ca.gif?imageMogr2/auto-orient/strip">
-<meta property="og:updated_time" content="2019-02-16T14:10:44.225Z">
+<meta property="og:updated_time" content="2019-02-16T14:20:30.420Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LVS持久化与超时时间问题分析">
-<meta name="twitter:description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图：可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示时，我分别使用">
+<meta name="twitter:description" content="1.前言在上一篇文章《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图： 2.问题现象可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/">
 
 
@@ -434,17 +434,18 @@
       
 
       
-        <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><p>在上一篇文章<a href="https://www.cnblogs.com/mycodingworld/p/dns_lvs_openresty.html" target="_blank" rel="noopener">《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》</a>中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图：<br><img src="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/" alt=""><br>可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示时，我分别使用了curl和浏览器，在curl演示时很正常，请求能轮流分到每个web容器，但在浏览器中演示时，刷新时显示轮流某一组web，而不是在所所有web应用轮流，我当时以为是浏览器缓存导致，所以新开了个页签；<br>我们来看一下：<br><img src="https://upload-images.jianshu.io/upload_images/6752673-7c9270acce4d40a4.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/612/format/webp" alt="curl命令演示"><br><img src="https://upload-images.jianshu.io/upload_images/6752673-eb50c4440ebf6a9d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/590/format/webp" alt="浏览器演示"></p>
-<h2 id="2-概念"><a href="#2-概念" class="headerlink" title="2.概念"></a>2.概念</h2><p> 这两天又深入学习了lvs的持久化；我之前以前在keepalived中配置了持久化时间(persistence_timeout)为0，再加上负载均衡策略(lb_algo)配置成rr，就能够轮流rs,其实不然，除了这些之外，还有连接空闲的超时时间；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 把来自同一个客户端IP的请求转发到同一个RS的持久化时间：persistence_timeout,通过这个持久化时间，我们可以实现会话保持</span><br><span class="line">2. 一个连接创建后处于空闲状态的超时时间</span><br><span class="line">   - tcp连接的空闲超时时间</span><br><span class="line">   - LVS收到客户端FIN消息的超时时间</span><br><span class="line">   - udp的超时时间</span><br></pre></td></tr></table></figure></p>
+        <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><p>在上一篇文章<a href="https://cool-coding.github.io/2019/02/16/Docker%E7%8E%AF%E5%A2%83%E4%B8%8B%E6%90%AD%E5%BB%BADNS-LVS-keepAlived-OpenResty%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%93%E9%9B%86%E7%BE%A4/">《搭建DNS+LVS(keepAlived)+OpenResty服务器(Docker环境)》</a>中,我搭建了dns+lvs+openresty+web集群；先来回顾一下架构图：<br><img src="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/" alt=""></p>
+<h2 id="2-问题现象"><a href="#2-问题现象" class="headerlink" title="2.问题现象"></a>2.问题现象</h2><p>可以看到，我把web服务器分成了两组，一组为web01,web02,挂在了openresty01下，另外一组:web03,web04,web05挂在了openresty02下；最后搭建完成，演示时，我分别使用了curl和浏览器，在curl演示时很正常，请求能轮流分到每个web容器，但在浏览器中演示时，刷新时显示轮流某一组web，而不是在所所有web应用轮流，我当时以为是浏览器缓存导致，所以新开了个页签；<br>我们来看一下：<br><img src="https://upload-images.jianshu.io/upload_images/6752673-7c9270acce4d40a4.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/612/format/webp" alt="curl命令演示"><br><img src="https://upload-images.jianshu.io/upload_images/6752673-eb50c4440ebf6a9d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/590/format/webp" alt="浏览器演示"><br><a id="more"></a></p>
+<h2 id="3-持久化概念"><a href="#3-持久化概念" class="headerlink" title="3.持久化概念"></a>3.持久化概念</h2><p> 这两天又深入学习了lvs的持久化；我之前在keepalived中配置了持久化时间(persistence_timeout)为0，再加上负载均衡策略(lb_algo)配置成rr，就能够轮流rs,其实不然，除了这些之外，还有连接空闲的超时时间；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 把来自同一个客户端IP的请求转发到同一个RS的持久化时间：persistence_timeout,通过这个持久化时间，我们可以实现会话保持</span><br><span class="line">2. 一个连接创建后处于空闲状态的超时时间</span><br><span class="line">   - tcp连接的空闲超时时间</span><br><span class="line">   - LVS收到客户端FIN消息的超时时间</span><br><span class="line">   - udp的超时时间</span><br></pre></td></tr></table></figure></p>
 <p>设置超时时间通过 <em>ipvsadm –set tcp tcpfin udp</em> 命令;查看连接状态使用<em>ipvsadm -lnc</em>命令查看</p>
-<h2 id="实战分析"><a href="#实战分析" class="headerlink" title="实战分析"></a>实战分析</h2><p>经过观察分析，curl命令请求时，每次请求都从不同的端口发请求，所以每次lvs都当做一个新的客户端来处理，而且curl请求完后，就关闭了tcp连接；而浏览器则不然，每次刷新很可能还是以同一个端口发出请求，而且tcp连接也会保持，所以lvs就会认为是同一个客户端，每次刷新就会指向同一rs,即openresty，openresty再将请求轮流分到下一层的web应用；<br>我们来看一下浏览器刷新的情况:<br><img src="https://upload-images.jianshu.io/upload_images/6752673-95aa6e9e138e56d2.gif?imageMogr2/auto-orient/strip" alt=""></p>
+<h2 id="4-问题分析"><a href="#4-问题分析" class="headerlink" title="4.问题分析"></a>4.问题分析</h2><p>经过观察分析，curl命令请求时，每次请求都从不同的端口发请求，所以每次lvs都当做一个新的客户端来处理，而且curl请求完后，就关闭了tcp连接；而浏览器则不然，每次刷新很可能还是以同一个端口发出请求，而且tcp连接也会保持，所以lvs就会认为是同一个客户端，每次刷新就会指向同一rs,即openresty，openresty再将请求轮流分到下一层的web应用；<br>我们来看一下浏览器刷新的情况:<br><img src="https://upload-images.jianshu.io/upload_images/6752673-95aa6e9e138e56d2.gif?imageMogr2/auto-orient/strip" alt=""></p>
 <p>刷新后看一下lvs服务器上连接状态:<br><img src="https://upload-images.jianshu.io/upload_images/6752673-8ac225a5bfef261d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>可见经过多次刷新(七八次)，tcp连接共有三个，两个处于连接中状态，一个处于FIN_WAIT状态;</p>
 <p>再来看一下curl命令执行情况:<br><img src="https://upload-images.jianshu.io/upload_images/6752673-41c734a56348d7f4.gif?imageMogr2/auto-orient/strip" alt=""></p>
 <p>再看一下lvs服务器上连接状态<br><img src="https://upload-images.jianshu.io/upload_images/6752673-51109508f3b2422e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>可见连接都处于FIN_WAIT状态</p>
 <p>将tcp/tcpfin/udp超时时间都设置为1s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lvs02 /]# ipvsadm --set 1 1 1</span><br></pre></td></tr></table></figure></p>
 <p>再看来浏览器刷新情况:<br><img src="https://upload-images.jianshu.io/upload_images/6752673-873df301b335c6ca.gif?imageMogr2/auto-orient/strip" alt=""></p>
 <p>可以看见，请求比较均匀的分到了web应用。<br>再到lvs服务器查看连接状态时，显示为空，因为1s时间比较短，很快就超时了；</p>
-<h2 id="3-附"><a href="#3-附" class="headerlink" title="3.附"></a>3.附</h2><ol>
+<h2 id="5-附"><a href="#5-附" class="headerlink" title="5.附"></a>5.附</h2><ol>
 <li><p>上一篇文章，我配置的LVS模式是DR，如果将其改成NAT，如何配置？</p>
 <blockquote>
 <p>修改keepalived配置文件，lb_kind配置成NAT，再在其下添加一行nat_mask<br>255.255.255.0,rs服务器上不用再绑定VIP地址、抑制ARP广播；需要配置一个默认网关</p>
@@ -745,7 +746,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-概念"><span class="nav-text">2.概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战分析"><span class="nav-text">实战分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-附"><span class="nav-text">3.附</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-问题现象"><span class="nav-text">2.问题现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-持久化概念"><span class="nav-text">3.持久化概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-问题分析"><span class="nav-text">4.问题分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-附"><span class="nav-text">5.附</span></a></li></ol></div>
             
 
           </div>

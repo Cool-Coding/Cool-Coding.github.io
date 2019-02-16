@@ -108,13 +108,13 @@
 
 
 
-  <meta name="description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图  Docker安装docker最开始我是在Mac">
+  <meta name="description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图">
 <meta name="keywords" content="lvs,dns,openresty">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker环境下搭建DNS LVS(keepAlived) OpenResty服务器简易集群">
 <meta property="og:url" content="https://cool-coding.github.io/2019/02/16/Docker环境下搭建DNS-LVS-keepAlived-OpenResty服务器简易集群/index.html">
 <meta property="og:site_name" content="半亩方塘">
-<meta property="og:description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图  Docker安装docker最开始我是在Mac">
+<meta property="og:description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-f78522c9aa7d5c6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -123,10 +123,10 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-7c9270acce4d40a4.gif?imageMogr2/auto-orient/strip">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-eb50c4440ebf6a9d.gif?imageMogr2/auto-orient/strip">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6752673-0684eec6e8ef52a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-02-16T14:08:10.820Z">
+<meta property="og:updated_time" content="2019-02-16T14:14:34.360Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker环境下搭建DNS LVS(keepAlived) OpenResty服务器简易集群">
-<meta name="twitter:description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图  Docker安装docker最开始我是在Mac">
+<meta name="twitter:description" content="现在上网已经成为每个人必备的技能，打开浏览器，输入网址，回车，简单的几步就能浏览到漂亮的网页，那从请求发出到返回漂亮的页面是怎么做到的呢，我将从公司中一般的分层架构角度考虑搭建一个简易集群来实现。目标是做到在浏览中输入网址，打开网页，而且每一层还具有高可用，只要一层中有一台主机是存活的，整个服务都将可用。 环境 Centos 7 Docker架构图">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -438,6 +438,7 @@
 <li>Centos 7</li>
 <li>Docker<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><img src="https://upload-images.jianshu.io/upload_images/6752673-5cf2fa40d6a131ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
 </ul>
+<a id="more"></a>
 <h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><p>最开始我是在MacOs系统上安装docker(<a href="https://docs.docker.com/docker-for-mac/install/" target="_blank" rel="noopener">下载地址</a>)，但是macOS无法直接访问docker容器的IP(<a href="https://docs.docker.com/docker-for-mac/networking/" target="_blank" rel="noopener">官网上也有说明</a>，有知道的朋友麻烦告知)，最终在Centos7系统安装docker,我安装的是CE版本(<a href="https://docs.docker.com/install/linux/docker-ce/centos/" target="_blank" rel="noopener">下载及安装说明地址</a>).</p>
 <h3 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h3><ul>
 <li>使用curl下载</li>
